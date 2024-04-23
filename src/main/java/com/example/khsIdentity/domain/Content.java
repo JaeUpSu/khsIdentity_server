@@ -2,6 +2,7 @@ package com.example.khsIdentity.domain;
 
 import jakarta.persistence.*;
 
+@Entity
 public class Content {
 
     @Id
@@ -17,6 +18,7 @@ public class Content {
     private String body;
 
     @Lob
+    @Column
     private byte[] image;
 
     public Content(){}

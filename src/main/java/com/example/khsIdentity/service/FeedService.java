@@ -61,7 +61,7 @@ public class FeedService {
 
     @Transactional(readOnly = true)
     public List<Feed> getFeedsByUser(String userId) {
-        return feedRepository.findAllByUserId(userId);
+        return feedRepository.findAllByUser_UserId(userId);
     }
 
     public Feed updatePrivacy(Long feedId, boolean isPrivate) {
@@ -84,6 +84,6 @@ public class FeedService {
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new IllegalArgumentException("Feed not found with id: " + feedId));
 
-        feedRepository.delete(feedId);
+        feedRepository.deleteById(feedId);
     }
 }

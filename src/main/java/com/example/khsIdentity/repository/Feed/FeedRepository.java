@@ -11,7 +11,7 @@ public interface FeedRepository {
     Optional<Feed> findById(Long id);
     Optional<User> findUserById(Long id);
     List<Feed> findByTitleContainingIgnoreCase(String title);
-    List<Feed> findAllByUserId(String userId);
+    List<Feed> findAllByUser_UserId(String userId);
     List<Feed> findAll();
-    void delete(Long id);
+    void deleteById(Long id);
 }

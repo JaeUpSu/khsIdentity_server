@@ -47,7 +47,7 @@ public class MemoryFeedRepository implements FeedRepository {
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         store.remove(id);
     }
 
@@ -56,8 +56,7 @@ public class MemoryFeedRepository implements FeedRepository {
         return Optional.ofNullable(store.get(id).getUser());
     }
 
-    @Override
-    public List<Feed> findAllByUserId(String userId) {
+    public List<Feed> findAllByUser_UserId(String userId) {
         return store.values().stream()
                 .filter(feed -> feed.getUser().getUserId().equals(userId))
                 .collect(Collectors.toList());

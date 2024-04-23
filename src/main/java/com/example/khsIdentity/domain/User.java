@@ -15,6 +15,7 @@ public class User {
     private Long id;
 
     @NotBlank(message = "이름을 작성해주세요!")
+    @Column
     private String name;
 
     @NotBlank(message = "아이디를 작성해주세요!")
@@ -23,6 +24,7 @@ public class User {
 
     @NotBlank
     @Size(min = 8, message = "비밀번호를 최소 8자 작성해주세요!")
+    @Column
     private String password;
 
     @Email(message = "이메일 형식에 맞게 작성해주세요!")
@@ -33,6 +35,7 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column
     private Boolean isManager;
 
     public User() {}

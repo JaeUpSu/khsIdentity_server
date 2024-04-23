@@ -61,7 +61,7 @@ public class MemoryFeedRepositoryTest {
         repository.save(feed2);
         repository.save(feed3);
 
-        repository.delete(feed2.getId());
+        repository.deleteById(feed2.getId());
 
         List<Feed> feeds = repository.findAll();
         assertThat(feeds.size()).isEqualTo(2);
@@ -79,7 +79,7 @@ public class MemoryFeedRepositoryTest {
         repository.save(feed2);
         repository.save(feed3);
 
-        repository.delete(feed2.getId());
+        repository.deleteById(feed2.getId());
 
         User result = repository.findUserById(feed1.getId()).get();
         assertThat(result.getId()).isEqualTo(user.getId());
@@ -97,7 +97,7 @@ public class MemoryFeedRepositoryTest {
         repository.save(feed2);
         repository.save(feed3);
 
-        List<Feed> result = repository.findAllByUserId(user.getUserId());
+        List<Feed> result = repository.findAllByUser_UserId(user.getUserId());
 
         System.out.println(result.size());
         assertThat(result.size()).isEqualTo(3);

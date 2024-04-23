@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Entity
 public class Feed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +18,7 @@ public class Feed {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Content> contents;
 
@@ -28,6 +30,7 @@ public class Feed {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column
     private Boolean isPrivate;
 
 
