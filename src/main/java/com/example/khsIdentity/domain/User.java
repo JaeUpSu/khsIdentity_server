@@ -2,9 +2,8 @@ package com.example.khsIdentity.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -14,28 +13,26 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "이름을 작성해주세요!")
-    @Column
+    @NotEmpty(message = "이름을 작성해주세요!")
+    @Column(nullable = false)
     private String name;
 
-    @NotBlank(message = "아이디를 작성해주세요!")
+    @NotEmpty(message = "아이디를 작성해주세요!")
     @Column(nullable = false, unique = true)
     private String userId;
 
-    @NotBlank
     @Size(min = 8, message = "비밀번호를 최소 8자 작성해주세요!")
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Email(message = "이메일 형식에 맞게 작성해주세요!")
     @Column(nullable = false, unique = true)
     private String email;
 
-    @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column
+    @Column(nullable = false)
     private Boolean isManager;
 
     public User() {}
@@ -46,6 +43,17 @@ public class User {
         this.password = password;
         this.email = email;
         this.isManager = false;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (isManager == null) {
+            isManager = false;
+        }
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
     }
 
     public Long getId() {
@@ -66,6 +74,10 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
 }

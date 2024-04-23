@@ -1,12 +1,15 @@
 package com.example.khsIdentity.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.khsIdentity.domain.User;
 import com.example.khsIdentity.service.UserService;
+
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -18,9 +21,11 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/join")
     public ResponseEntity<Long> registerUser(@RequestBody User user) {
+        log.info("Received user registration request: {}", user);
         Long userId = userService.join(user);
+        log.info("Registered user ID: {}", userId);
         return ResponseEntity.ok(userId);
     }
 
