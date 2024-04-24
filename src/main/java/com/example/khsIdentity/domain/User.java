@@ -1,5 +1,6 @@
 package com.example.khsIdentity.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     @NotEmpty(message = "이름을 작성해주세요!")
@@ -23,6 +25,7 @@ public class User {
 
     @Size(min = 8, message = "비밀번호를 최소 8자 작성해주세요!")
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     @Email(message = "이메일 형식에 맞게 작성해주세요!")

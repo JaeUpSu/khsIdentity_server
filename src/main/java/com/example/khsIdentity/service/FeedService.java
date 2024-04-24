@@ -4,6 +4,7 @@ import com.example.khsIdentity.domain.Content;
 import com.example.khsIdentity.domain.Feed;
 import com.example.khsIdentity.domain.User;
 import com.example.khsIdentity.repository.Feed.FeedRepository;
+import com.example.khsIdentity.repository.User.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,29 +15,41 @@ import java.util.Optional;
 @Transactional
 public class FeedService {
     private FeedRepository feedRepository;
-    public FeedService(FeedRepository feedRepository) {
+    private UserRepository userRepository;
+    public FeedService(FeedRepository feedRepository, UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.feedRepository = feedRepository;
+
     }
 
     public Long write(Feed feed) {
+        User user = feed.getUser();
+        if (user != null) {
+            if (user.getId() == null) {
+                userRepository.save(user);
+            } else {
+                user = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+            }
+            feed.setUser(user);
+        }
+
         feedRepository.save(feed);
         return feed.getId();
     }
 
-    public Content addContentToFeed(Long feedId, String body, MultipartFile file) throws IOException {
+    @Transactional
+    public Feed addContentToFeed(Long feedId, Content content) throws IOException {
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new IllegalArgumentException("Feed not found with id: " + feedId));
 
-        Content newContent = new Content();
-        newContent.setFeed(feed);
-        newContent.setBody(body);
-        if (file != null && !file.isEmpty()) {
-            newContent.setImage(file.getBytes());
-        }
+        manageContent(feed, content);
 
-        feed.getContents().add(newContent);
-        feedRepository.save(feed);
-        return newContent;
+        return feed;
+    }
+
+    private void manageContent(Feed feed, Content content) {
+        content.setFeed(feed);  // Set the relationship from content to feed
+        feed.getContents().add(content);  // Add the content to feed's list
     }
 
     @Transactional(readOnly = true)

@@ -6,7 +6,6 @@ import com.example.khsIdentity.service.FeedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,15 +29,20 @@ public class FeedController {
 
     @PostMapping
     public ResponseEntity<Long> createFeed(@RequestBody Feed feed) {
+        if (feed.getContents() != null) {
+            for (Content content : feed.getContents()) {
+                content.setFeed(feed);  // Manually setting the back-reference
+            }
+        }
+
         return ResponseEntity.ok(feedService.write(feed));
     }
 
     @PostMapping("/{feedId}/contents")
-    public ResponseEntity<Content> addContentToFeed(@PathVariable Long feedId,
-                                                    @RequestParam String body,
-                                                    @RequestParam("file") MultipartFile file) throws IOException {
-        Content content = feedService.addContentToFeed(feedId, body, file);
-        return ResponseEntity.ok(content);
+    public ResponseEntity<Feed> addContentToFeed(@PathVariable Long feedId,
+                                                    @RequestBody Content content) throws IOException {
+        Feed feed = feedService.addContentToFeed(feedId, content);
+        return ResponseEntity.ok(feed);
     }
 
     @GetMapping("/{feedId}")

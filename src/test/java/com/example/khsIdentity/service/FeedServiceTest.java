@@ -4,6 +4,7 @@ import com.example.khsIdentity.domain.Content;
 import com.example.khsIdentity.domain.Feed;
 import com.example.khsIdentity.domain.User;
 import com.example.khsIdentity.repository.Feed.MemoryFeedRepository;
+import com.example.khsIdentity.repository.User.MemoryUserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +22,12 @@ public class FeedServiceTest {
     FeedService feedService;
 
     MemoryFeedRepository feedRepository;
+    MemoryUserRepository userRepository;
 
     @BeforeEach
     void beforeEach() {
         feedRepository = new MemoryFeedRepository();
-        feedService = new FeedService(feedRepository);
+        feedService = new FeedService(feedRepository, userRepository);
     }
 
     @AfterEach
@@ -43,10 +45,12 @@ public class FeedServiceTest {
 
         // when
         MultipartFile file = new MockMultipartFile("img", "img".getBytes());
-        Content newContent = feedService.addContentToFeed(id, "newContents", file);
+        Content newContent = new Content(feed, "newContents");
+        newContent.setImage(file.getBytes());
+        Feed updatedFeed = feedService.addContentToFeed(id, newContent);
 
         // then
-        assertThat(newContent).isEqualTo(feedService.getFeed(id).get().getContents().get(0));
+        assertThat(newContent).isEqualTo(updatedFeed.getContents().get(0));
     }
 
     @Test

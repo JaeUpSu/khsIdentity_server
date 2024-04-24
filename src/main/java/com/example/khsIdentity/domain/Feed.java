@@ -1,6 +1,8 @@
 package com.example.khsIdentity.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,10 +17,12 @@ public class Feed {
     private Long id;
 
     @ManyToOne
+    @JsonIgnoreProperties("feeds")
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column
+    @JsonManagedReference
     @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Content> contents;
 
@@ -40,7 +44,18 @@ public class Feed {
         this.user = user;
         this.title = title;
         this.contents = contents;
+        this.createdAt = LocalDateTime.now();
         this.isPrivate = false;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (isPrivate == null) {
+            isPrivate = false;
+        }
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
     }
 
     public Long getId() {

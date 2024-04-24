@@ -18,7 +18,7 @@ public class WebSecurityConfig {
     @Bean
     protected SecurityFilterChain config(HttpSecurity http) throws Exception {
         http.csrf((csrf)->csrf.disable()).authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/users/join").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated()	// 어떠한 요청이라도 인증필요
                 )
                 .formLogin(login -> login	// form 방식 로그인 사용

@@ -23,7 +23,6 @@ public class UserService {
     *  회원가입
     * */
     public Long join(User user) {
-
         validateDuplicateUser(user);
         userRepository.save(user);
         return user.getId();
