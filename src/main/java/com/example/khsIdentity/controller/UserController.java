@@ -23,9 +23,7 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity<Long> registerUser(@RequestBody User user) {
-        log.info("Received user registration request: {}", user);
         Long userId = userService.join(user);
-        log.info("Registered user ID: {}", userId);
         return ResponseEntity.ok(userId);
     }
 

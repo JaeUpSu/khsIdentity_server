@@ -1,0 +1,15 @@
+= KHS - Identity API 문서
+jaeupsu.github.io
+:doctype: book
+:icons: front
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+[[User-API]]
+== User API
+
+[[User-단일-조회]]
+=== User 단일 조회
+operation::user-get[snippets='http-request,path-parameters,http-response,response-fields']

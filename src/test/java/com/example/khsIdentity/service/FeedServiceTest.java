@@ -27,6 +27,7 @@ public class FeedServiceTest {
     @BeforeEach
     void beforeEach() {
         feedRepository = new MemoryFeedRepository();
+        userRepository = new MemoryUserRepository();
         feedService = new FeedService(feedRepository, userRepository);
     }
 
@@ -38,7 +39,7 @@ public class FeedServiceTest {
     @Test
     void 컨텐츠_추가 () throws IOException {
         // given
-        User user = new User();
+        User user = new User("mememe12","mememe12","mememe12","mememe12@google.co.kr");
         List<Content> contents = new ArrayList<>();
         Feed feed = new Feed(user, "title", contents);
         Long id = feedService.write(feed);
@@ -71,7 +72,7 @@ public class FeedServiceTest {
     @Test
     void 제목에_문자열_탐색_포함_모든피드_반환() {
         // given
-        User user = new User();
+        User user = new User("mememe12","mememe12","mememe12","mememe12@google.co.kr");
         List<Content> contents = new ArrayList<>();
         Feed feed1 = new Feed(user, "포함", contents);
         Feed feed2 = new Feed(user, "포함", contents);
