@@ -1,6 +1,8 @@
 package com.example.khsIdentity.controller;
 
+import com.example.khsIdentity.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +24,9 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<Long> registerUser(@RequestBody User user) {
-        Long userId = userService.join(user);
-        return ResponseEntity.ok(userId);
+    public ResponseEntity<UserDTO> registerUser(@RequestBody User user) {
+        UserDTO joinUser = userService.join(user);
+        return ResponseEntity.ok(joinUser);
     }
 
     @GetMapping("/current")
@@ -40,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         return userService.findOne(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

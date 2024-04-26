@@ -1,6 +1,7 @@
 package com.example.khsIdentity.service;
 
 import com.example.khsIdentity.domain.User;
+import com.example.khsIdentity.dto.UserDTO;
 import com.example.khsIdentity.repository.User.MemoryUserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,10 +30,10 @@ class UserServiceTest {
         User user = new User("spring00", "spring00", "spring00", "spring00@naver.com");
 
         // when (이거를 실행 했을 때)
-        Long saveId = userService.join(user);
+        UserDTO user1 = userService.join(user);
 
         // then (이 결과가 기대돼)
-        User findMember = userService.findOne(saveId).get();
+        User findMember = userService.findOneByUserId(user1.getUserId()).get();
         assertThat(user.getName()).isEqualTo(findMember.getName());
     }
 

@@ -1,0 +1,10 @@
+[[User-API]]
+== User API
+
+[[User-단일-조회]]
+=== User 단일 조회
+operation::user-controller-test/user_get[snippets='http-request,path-parameters,http-response,response-fields']
+
+[[User-생성]]
+=== User 생성
+operation::user-controller-test/user_post[snippets='http-request,response-fields,http-response']

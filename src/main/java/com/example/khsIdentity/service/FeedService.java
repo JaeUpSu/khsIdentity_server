@@ -6,7 +6,6 @@ import com.example.khsIdentity.domain.User;
 import com.example.khsIdentity.repository.Feed.FeedRepository;
 import com.example.khsIdentity.repository.User.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;

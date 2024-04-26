@@ -7,9 +7,4 @@ jaeupsu.github.io
 :toclevels: 2
 :sectlinks:
 
-[[User-API]]
-== User API
-
-[[User-단일-조회]]
-=== User 단일 조회
-operation::user-get[snippets='http-request,path-parameters,http-response,response-fields']
+include::User-API.adoc[]

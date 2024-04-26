@@ -84,22 +84,22 @@ asciidoctor { // asciidoctor 작업 구성
 	baseDirFollowsSourceFile()
 }
 
-// static/docs 폴더 비우기
-asciidoctor.doFirst {
-	delete file('src/main/resources/static/docs')
-}
-
-// asccidoctor 작업 이후 생성된 HTML 파일을 static/docs 로 copy
-task copyDocument(type: Copy) {
-	dependsOn asciidoctor
-	from file("build/docs/asciidoc")
-	into file("src/main/resources/static/docs")
-}
-
-// build 의 의존작업 명시
-build {
-	dependsOn copyDocument
-}
+//// static/docs 폴더 비우기
+//asciidoctor.doFirst {
+//	delete file('src/main/resources/static/docs')
+//}
+//
+//// asccidoctor 작업 이후 생성된 HTML 파일을 static/docs 로 copy
+//task copyDocument(type: Copy) {
+//	dependsOn asciidoctor
+//	from file("build/docs/asciidoc")
+//	into file("src/main/resources/static/docs")
+//}
+//
+//// build 의 의존작업 명시
+//build {
+//	dependsOn copyDocument
+//}
 
 // 참고사항 //
 // 공식 문서에서는 위의 ascidoctor.doFirst부터 아래 내용은 없고 이와 같은 내용만 있습니다.

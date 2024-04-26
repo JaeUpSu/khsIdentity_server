@@ -1,6 +1,5 @@
 package com.example.khsIdentity.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -94,10 +93,6 @@ public class Feed {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public Boolean getPrivate() {
         return isPrivate;
     }
@@ -106,8 +101,4 @@ public class Feed {
         isPrivate = aPrivate;
     }
 
-    public void addContent(Content content) {
-        contents.add(content);
-        content.setFeed(this);  // Setting the back-reference is crucial
-    }
 }

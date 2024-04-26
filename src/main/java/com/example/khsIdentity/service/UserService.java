@@ -1,6 +1,8 @@
 package com.example.khsIdentity.service;
 
 import com.example.khsIdentity.domain.User;
+import com.example.khsIdentity.dto.UserDTO;
+import com.example.khsIdentity.mapper.Mapper;
 import com.example.khsIdentity.repository.User.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,10 +24,10 @@ public class UserService {
     /*
     *  회원가입
     * */
-    public Long join(User user) {
+    public UserDTO join(User user) {
         validateDuplicateUser(user);
-        userRepository.save(user);
-        return user.getId();
+        User newUser = userRepository.save(user);
+        return new Mapper().convertUserToDto(newUser);
     }
 
     public User getLoggedInUser() {
