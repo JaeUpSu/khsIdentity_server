@@ -1,5 +1,6 @@
 package com.example.khsIdentity.controller;
 
+import com.example.khsIdentity.dto.LoginRequestDTO;
 import com.example.khsIdentity.dto.UserDTO;
 import com.example.khsIdentity.mapper.Mapper;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +35,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> login(@RequestBody String userId, String password) {
+    public ResponseEntity<UserDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         try {
-            UserDTO loggedInUser = userService.login(userId, password);
+            UserDTO loggedInUser = userService.login(loginRequestDTO);
             return ResponseEntity.ok(loggedInUser);
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -64,13 +65,13 @@ public class UserController {
     }
 
     @GetMapping("/byUserId/{userId}")
-    public ResponseEntity<UserDTO> getUserByUserId(@PathVariable String userId) {
+    public ResponseEntity<UserDTO> getUserByUserId(@PathVariable("userId") String userId) {
         UserDTO user = new Mapper().convertUserToDto(userService.findOneByUserId(userId).get());
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/byEmail/{email}")
-    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable("email") String email) {
         UserDTO user = new Mapper().convertUserToDto(userService.findOneByEmail(email).get());
         return ResponseEntity.ok(user);
     }

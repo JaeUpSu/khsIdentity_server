@@ -1,6 +1,7 @@
 package com.example.khsIdentity.service;
 
 import com.example.khsIdentity.domain.User;
+import com.example.khsIdentity.dto.LoginRequestDTO;
 import com.example.khsIdentity.dto.UserDTO;
 import com.example.khsIdentity.mapper.Mapper;
 import com.example.khsIdentity.repository.User.UserRepository;
@@ -58,7 +59,10 @@ public class UserService {
         throw new IllegalStateException("User not found in session.");
     }
 
-    public UserDTO login(String userId, String password) {
+    public UserDTO login(LoginRequestDTO loginRequestDTO) {
+        String userId = loginRequestDTO.getUserId();
+        String password = loginRequestDTO.getPassword();
+
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with userId : " + userId));
 

@@ -1,5 +1,6 @@
 package com.example.khsIdentity.controller;
 
+import com.example.khsIdentity.dto.LoginRequestDTO;
 import com.example.khsIdentity.dto.UserDTO;
 import com.example.khsIdentity.mapper.Mapper;
 import com.example.khsIdentity.support.docs.RestDocsTestSupport;
@@ -10,15 +11,12 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import static com.example.khsIdentity.config.RestDocsConfig.field;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -35,24 +33,29 @@ public class UserControllerTest extends RestDocsTestSupport {
 
     @BeforeEach
     void setUpMocks() {
-        User mockUser = new User("Test User","TEST","TEST1234", "test@example.com");
-        mockUser.setId(1L);
+        User user0 = new User("김현수", "JaeUpSu","pwjeaupsu123", "jaeupsu@example.com");
+        User user1 = new User("JohnDoe", "johndoe123","pwjondoe123", "john.doe@example.com");
+        User user2 = new User("AlDoe", "aldoe321","pwaldoe321", "al.doe@example.com");
+        User user3 = new User("BonDoe", "bondoe321","pwbondoe321", "bon.doe@example.com");
+        user0.setId(1L);
+        user1.setId(2L);
+        user2.setId(3L);
+        user3.setId(4L);
 
-        when(userService.findOne(1L)).thenReturn(Optional.of(mockUser));
+        UserDTO userDTO = new Mapper().convertUserToDto(user1);
+
+        when(userService.join(any(User.class))).thenReturn(userDTO);
+        when(userService.findOne(anyLong())).thenReturn(Optional.of(user0));
+        when(userService.findOneByUserId(anyString())).thenReturn(Optional.of(user0));
+        when(userService.findOneByEmail(anyString())).thenReturn(Optional.of(user0));
+        when(userService.findUsers()).thenReturn(Arrays.asList(user0, user1, user2, user3));
+        when(userService.getLoggedInUser()).thenReturn(userDTO);
     }
 
     @Test
     public void user_post() throws Exception {
-        User user = new User("김현수","jaeupsu","qlalfqjsgh","jaeupsu@email.com");
-        user.setId(2L);
-
-        // thenReturn(userDto)는 join() 메서드가 호출될 때 마다
-        // userDto 객체를 반환하도록 설정
-        // 따라서 테스트 코드에서 userService.join(any(User.class))가
-        // 호출되면 항상 userDto가 반환
-
-        UserDTO userDto = new UserDTO(user.getName(), user.getUserId(), user.getEmail(), LocalDateTime.now());
-        when(userService.join(any(User.class))).thenReturn(userDto);
+        User user = new User("김현수", "JaeUpSu","pwjeaupsu123", "jaeupsu@example.com");
+        user.setId(1L);
 
         mockMvc.perform(
                         post("/api/users/join")
@@ -97,7 +100,7 @@ public class UserControllerTest extends RestDocsTestSupport {
                                         fieldWithPath("name").description("The name of the user"),
                                         fieldWithPath("userId").description("The user's unique identifier"),
                                         fieldWithPath("email").description("The email of the user"),
-                                        fieldWithPath("createdAt").description("The date and time when the user was created").type("String").optional()
+                                        fieldWithPath("createdAt").description("The date and time when the user was created").type("String")
                                 )
                         )
                 );
@@ -105,21 +108,6 @@ public class UserControllerTest extends RestDocsTestSupport {
 
     @Test
     public void all_users_get() throws Exception {
-        User user1 = new User("JohnDoe", "johndoe123","pwjondoe123", "john.doe@example.com");
-        User user2 = new User("AlDoe", "aldoe321","pwaldoe321", "al.doe@example.com");
-        User user3 = new User("BonDoe", "bondoe321","pwbondoe321", "bon.doe@example.com");
-
-//        // Mock 데이터 리스트 생성
-//        List<UserDTO> data = Arrays.asList(user1, user2, user3)
-//                .stream().map(u -> new Mapper().convertUserToDto(u))
-//                .collect(Collectors.toList());
-//
-//        List<UserDTO> userList = userService.findUsers().stream()
-//                .map(u -> new Mapper().convertUserToDto(u))
-//                .collect(Collectors.toList());
-
-        // Mock 데이터 설정
-        when(userService.findUsers()).thenReturn(Arrays.asList(user1, user2, user3));
 
         mockMvc.perform(
                 get("/api/users")
@@ -135,6 +123,110 @@ public class UserControllerTest extends RestDocsTestSupport {
                                     fieldWithPath("[].createdAt").description("생성 날짜")
                             )
                     )
+                );
+    }
+
+    @Test
+    public void user_byUserId_get() throws Exception {
+        mockMvc.perform(
+                        get("/api/users/byUserId/{userId}", "JaeUpSu")
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("userId").description("User Id")
+                                ),
+                                responseFields(
+                                        fieldWithPath("name").description("The name of the user"),
+                                        fieldWithPath("userId").description("The user's unique identifier"),
+                                        fieldWithPath("email").description("The email of the user"),
+                                        fieldWithPath("createdAt").description("The date and time when the user was created").type("String")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void user_byEmail_get() throws Exception {
+        mockMvc.perform(
+                        get("/api/users/byEmail/{email}", "jaeupsu@email.com")
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("email").description("User Email")
+                                ),
+                                responseFields(
+                                        fieldWithPath("name").description("The name of the user"),
+                                        fieldWithPath("userId").description("The user's unique identifier"),
+                                        fieldWithPath("email").description("The email of the user"),
+                                        fieldWithPath("createdAt").description("The date and time when the user was created").type("String").optional()
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void user_success_login() throws Exception {
+        User user = new User("김현수", "JaeUpSu","pwjeaupsu123", "jaeupsu@example.com");
+        user.setId(1L);
+
+        when(userService.login(any(LoginRequestDTO.class))).thenReturn(new Mapper().convertUserToDto(user));
+        LoginRequestDTO loginRequestDTO = new LoginRequestDTO(user.getUserId(), user.getPassword());
+
+        mockMvc.perform(
+                        post("/api/users/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(createJson(loginRequestDTO))
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        restDocs.document(
+                                responseFields(
+                                        fieldWithPath("name").description("이름"),
+                                        fieldWithPath("userId").description("사용자 ID"),
+                                        fieldWithPath("email").description("이메일"),
+                                        fieldWithPath("createdAt").description("생성 날짜")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void user_fail_login() throws Exception {
+        User user = new User("김현수", "JaeUpSu","pwjeaupsu123", "jaeupsu@example.com");
+        user.setId(1L);
+
+        when(userService.login(any(LoginRequestDTO.class))).thenThrow(new BadCredentialsException("Credentials Invalid"));
+        LoginRequestDTO loginRequestDTO = new LoginRequestDTO(user.getUserId(), user.getPassword());
+
+        mockMvc.perform(
+                        post("/api/users/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(createJson(loginRequestDTO))
+                ).andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void user_current_get() throws Exception {
+        mockMvc.perform(
+                        get("/api/users/current")
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        restDocs.document(
+                                responseFields(
+                                        fieldWithPath("name").description("The name of the user"),
+                                        fieldWithPath("userId").description("The user's unique identifier"),
+                                        fieldWithPath("email").description("The email of the user"),
+                                        fieldWithPath("createdAt").description("The date and time when the user was created").type("String")
+                                )
+                        )
                 );
     }
 }
