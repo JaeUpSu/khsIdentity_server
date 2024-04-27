@@ -5,6 +5,7 @@ import com.example.khsIdentity.domain.Feed;
 import com.example.khsIdentity.domain.User;
 import com.example.khsIdentity.repository.Feed.FeedRepository;
 import com.example.khsIdentity.repository.User.UserRepository;
+import com.example.khsIdentity.response.FeedResponse;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -14,26 +15,18 @@ import java.util.Optional;
 @Transactional
 public class FeedService {
     private FeedRepository feedRepository;
-    private UserRepository userRepository;
-    public FeedService(FeedRepository feedRepository, UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public FeedService(FeedRepository feedRepository) {
         this.feedRepository = feedRepository;
 
     }
 
-    public Long write(Feed feed) {
+    public FeedResponse write(Feed feed) {
         User user = feed.getUser();
-        if (user != null) {
-            if (user.getId() == null) {
-                userRepository.save(user);
-            } else {
-                user = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
-            }
-            feed.setUser(user);
-        }
+        feed.setUser(user);
 
         feedRepository.save(feed);
-        return feed.getId();
+        FeedResponse feedResponse = new FeedResponse(feed);
+        return feedResponse;
     }
 
     @Transactional
@@ -80,7 +73,7 @@ public class FeedService {
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new IllegalArgumentException("Feed not found with id: " + feedId));
 
-        feed.setPrivate(isPrivate);
+        feed.setIsPrivate(isPrivate);
         return feedRepository.save(feed);
     }
 

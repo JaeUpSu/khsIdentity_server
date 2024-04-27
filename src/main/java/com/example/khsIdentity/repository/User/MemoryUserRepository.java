@@ -4,6 +4,7 @@ import com.example.khsIdentity.domain.User;
 import jakarta.validation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /*
 * @ 테스트, 프로토타입 용 (실제 기능 X)
@@ -44,13 +45,6 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByName(String name) {
-        return store.values().stream()
-                .filter(user -> user.getName().equals(name))
-                .findAny();
-    }
-
-    @Override
     public Optional<User> findByUserId(String userId) {
         return store.values().stream()
                 .filter(user -> user.getUserId().equals(userId))
@@ -67,6 +61,12 @@ public class MemoryUserRepository implements UserRepository {
     @Override
     public List<User> findAll() {
         return new ArrayList<>(store.values());
+    }
+
+    @Override
+    public List<User> findByName(String name) {
+        return store.values().stream()
+                .filter(user -> user.getName().equals(name)).collect(Collectors.toList());
     }
 
     public void clearStore() {

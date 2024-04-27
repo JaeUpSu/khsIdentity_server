@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/feeds")
+@RequestMapping("/api/feeds")
 public class FeedController {
 
     private FeedService feedService;
@@ -33,13 +33,7 @@ public class FeedController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createFeed(@RequestBody Feed feed) {
-        if (feed.getContents() != null) {
-            for (Content content : feed.getContents()) {
-                content.setFeed(feed);  // Manually setting the back-reference
-            }
-        }
-
+    public ResponseEntity<FeedResponse> createFeed(@RequestBody Feed feed) {
         return ResponseEntity.ok(feedService.write(feed));
     }
 

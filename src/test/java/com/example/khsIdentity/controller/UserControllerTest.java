@@ -37,10 +37,14 @@ public class UserControllerTest extends RestDocsTestSupport {
         User user1 = new User("JohnDoe", "johndoe123","pwjondoe123", "john.doe@example.com");
         User user2 = new User("AlDoe", "aldoe321","pwaldoe321", "al.doe@example.com");
         User user3 = new User("BonDoe", "bondoe321","pwbondoe321", "bon.doe@example.com");
+        
+        User user4 = new User("김현수", "JaeUpSu2","pwjeaupsu1223", "jaeupsu2@example.com");
+        
         user0.setId(1L);
         user1.setId(2L);
         user2.setId(3L);
         user3.setId(4L);
+        user4.setId(5L);
 
         UserDTO userDTO = new Mapper().convertUserToDto(user1);
 
@@ -49,6 +53,7 @@ public class UserControllerTest extends RestDocsTestSupport {
         when(userService.findOneByUserId(anyString())).thenReturn(Optional.of(user0));
         when(userService.findOneByEmail(anyString())).thenReturn(Optional.of(user0));
         when(userService.findUsers()).thenReturn(Arrays.asList(user0, user1, user2, user3));
+        when(userService.findUsersByName(anyString())).thenReturn(Arrays.asList(user0, user4));
         when(userService.getLoggedInUser()).thenReturn(userDTO);
     }
 
@@ -110,19 +115,41 @@ public class UserControllerTest extends RestDocsTestSupport {
     public void all_users_get() throws Exception {
 
         mockMvc.perform(
-                get("/api/users")
-                        .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk())
+                        get("/api/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
                 .andDo(print())
                 .andDo(
-                    restDocs.document(
-                            responseFields(
-                                    fieldWithPath("[].name").description("이름"),
-                                    fieldWithPath("[].userId").description("아이디"),
-                                    fieldWithPath("[].email").description("이메일"),
-                                    fieldWithPath("[].createdAt").description("생성 날짜")
-                            )
-                    )
+                        restDocs.document(
+                                responseFields(
+                                        fieldWithPath("[].name").description("이름"),
+                                        fieldWithPath("[].userId").description("아이디"),
+                                        fieldWithPath("[].email").description("이메일"),
+                                        fieldWithPath("[].createdAt").description("생성 날짜")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void all_users_byName_get() throws Exception {
+        mockMvc.perform(
+                        get("/api/users/byName/{name}", "김현수")
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("name").description("이름")
+                                ),
+                                responseFields(
+                                        fieldWithPath("[].name").description("이름"),
+                                        fieldWithPath("[].userId").description("아이디"),
+                                        fieldWithPath("[].email").description("이메일"),
+                                        fieldWithPath("[].createdAt").description("생성 날짜")
+                                )
+                        )
                 );
     }
 

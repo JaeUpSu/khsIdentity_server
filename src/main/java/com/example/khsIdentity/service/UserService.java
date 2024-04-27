@@ -37,7 +37,6 @@ public class UserService {
         return new Mapper().convertUserToDto(newUser);
     }
 
-
     private void validateDuplicateUser(User user) {
         userRepository.findByUserId(user.getUserId())
                 .ifPresent(u -> {
@@ -77,6 +76,9 @@ public class UserService {
     public Optional<User> findOneByUserId(String userId) {return userRepository.findByUserId(userId);}
     public Optional<User> findOneByEmail(String email) {return userRepository.findByEmail(email);}
 
+    public List<User> findUsersByName(String name) {
+        return userRepository.findByName(name);
+    }
 
     public List<User> findUsers() {
         return userRepository.findAll();

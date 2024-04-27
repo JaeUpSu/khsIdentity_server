@@ -11,6 +11,7 @@ import java.util.List;
 
 @Entity
 public class Feed {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,7 +34,7 @@ public class Feed {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column
+    @Column(nullable = false)
     private Boolean isPrivate;
 
 
@@ -89,16 +90,20 @@ public class Feed {
         this.contents = contents;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public Boolean getPrivate() {
+    public Boolean getIsPrivate() {
         return isPrivate;
     }
 
-    public void setPrivate(Boolean aPrivate) {
-        isPrivate = aPrivate;
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
 }

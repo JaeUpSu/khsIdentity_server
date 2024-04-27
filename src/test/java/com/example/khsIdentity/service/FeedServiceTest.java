@@ -5,6 +5,7 @@ import com.example.khsIdentity.domain.Feed;
 import com.example.khsIdentity.domain.User;
 import com.example.khsIdentity.repository.Feed.MemoryFeedRepository;
 import com.example.khsIdentity.repository.User.MemoryUserRepository;
+import com.example.khsIdentity.response.FeedResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,13 +23,11 @@ public class FeedServiceTest {
     FeedService feedService;
 
     MemoryFeedRepository feedRepository;
-    MemoryUserRepository userRepository;
 
     @BeforeEach
     void beforeEach() {
         feedRepository = new MemoryFeedRepository();
-        userRepository = new MemoryUserRepository();
-        feedService = new FeedService(feedRepository, userRepository);
+        feedService = new FeedService(feedRepository);
     }
 
     @AfterEach
@@ -42,13 +41,13 @@ public class FeedServiceTest {
         User user = new User("mememe12","mememe12","mememe12","mememe12@google.co.kr");
         List<Content> contents = new ArrayList<>();
         Feed feed = new Feed(user, "title", contents);
-        Long id = feedService.write(feed);
+        FeedResponse feedResponse = feedService.write(feed);
 
         // when
         MultipartFile file = new MockMultipartFile("img", "img".getBytes());
         Content newContent = new Content(feed, "newContents");
         newContent.setImage(file.getBytes());
-        Feed updatedFeed = feedService.addContentToFeed(id, newContent);
+        Feed updatedFeed = feedService.addContentToFeed(feedResponse.getId(), newContent);
 
         // then
         assertThat(newContent).isEqualTo(updatedFeed.getContents().get(0));
@@ -60,7 +59,7 @@ public class FeedServiceTest {
         User user = new User("mememe12","mememe12","mememe12","mememe12@google.co.kr");
         List<Content> contents = new ArrayList<>();
         Feed feed = new Feed(user, "title", contents);
-        Long id = feedService.write(feed);
+        Long id = feedService.write(feed).getId();
 
         // when
         User user1 = feedService.getUserById(id).get();
@@ -118,13 +117,13 @@ public class FeedServiceTest {
         User user = new User("mememe12","mememe12","mememe12","mememe12@google.co.kr");
         List<Content> contents = new ArrayList<>();
         Feed feed = new Feed(user, "title", contents);
-        Long id = feedService.write(feed);
+        Long id = feedService.write(feed).getId();
 
         // when
         Feed nextFeed = feedService.updatePrivacy(id, true);
 
         // then
-        assertThat(nextFeed.getPrivate()).isEqualTo(true);
+        assertThat(nextFeed.getIsPrivate()).isEqualTo(true);
     }
 
     @Test
@@ -133,7 +132,7 @@ public class FeedServiceTest {
         User user = new User("mememe12","mememe12","mememe12","mememe12@google.co.kr");
         List<Content> contents = new ArrayList<>();
         Feed feed = new Feed(user, "title", contents);
-        Long id = feedService.write(feed);
+        Long id = feedService.write(feed).getId();
 
         // when
         Feed nextFeed = feedService.updateTitleFeed(id, "new Title");

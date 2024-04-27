@@ -36,7 +36,7 @@ public class SpringConfig {
     }
 
     @Bean
-    public FeedService feedService() {return new FeedService(feedRepository, userRepository);}
+    public FeedService feedService() {return new FeedService(feedRepository);}
 
     @Bean
     public ContentService contentService() {return new ContentService(contentRepository);}

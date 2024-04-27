@@ -8,3 +8,6 @@ jaeupsu.github.io
 :sectlinks:
 
 include::User-API.adoc[]
+@ +
+@
+include::Feed-API.adoc[]

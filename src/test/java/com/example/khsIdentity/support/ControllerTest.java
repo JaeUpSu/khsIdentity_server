@@ -1,5 +1,6 @@
 package com.example.khsIdentity.support;
 
+import com.example.khsIdentity.service.FeedService;
 import com.example.khsIdentity.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,6 +22,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected UserService userService;
+
+    @MockBean
+    protected FeedService feedService;
 
 
     protected String createJson(Object dto) throws JsonProcessingException {

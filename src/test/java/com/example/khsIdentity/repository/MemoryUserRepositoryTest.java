@@ -77,9 +77,9 @@ class MemoryUserRepositoryTest {
         User user2 = new User("spring22", "spring22", "spring22", "spring22@naver.com");
         repository.save(user2);
 
-        User result = repository.findByName("spring11").get();
+        List<User> results = repository.findByName("spring11");
 
-        assertThat(result).isEqualTo(user1);
+        assertThat(results.get(1)).isEqualTo(user2);
     }
 
     @Test

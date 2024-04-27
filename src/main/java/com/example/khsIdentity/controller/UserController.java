@@ -50,14 +50,6 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userService.findUsers()
-                .stream().map(user -> mapper.convertUserToDto(user))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(users);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable("id") Long id) {
         UserDTO user = new Mapper().convertUserToDto(userService.findOne(id).get());
@@ -74,5 +66,21 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable("email") String email) {
         UserDTO user = new Mapper().convertUserToDto(userService.findOneByEmail(email).get());
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        List<UserDTO> users = userService.findUsers()
+                .stream().map(user -> mapper.convertUserToDto(user))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/byName/{name}")
+    public ResponseEntity<List<UserDTO>> getUsersByName(@PathVariable("name") String name) {
+        List<UserDTO> users = userService.findUsersByName(name)
+                .stream().map(user -> mapper.convertUserToDto(user))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(users);
     }
 }
