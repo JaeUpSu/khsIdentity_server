@@ -6,6 +6,9 @@ import com.example.khsIdentity.repository.User.MemoryUserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,11 +17,13 @@ class UserServiceTest {
 
     UserService userService;
     MemoryUserRepository userRepository;
+    PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void beforeEach() {
         userRepository = new MemoryUserRepository();
-        userService = new UserService(userRepository);
+        passwordEncoder = new BCryptPasswordEncoder();
+        userService = new UserService(userRepository, passwordEncoder);
     }
 
     @AfterEach
