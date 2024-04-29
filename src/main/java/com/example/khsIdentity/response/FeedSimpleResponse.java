@@ -1,37 +1,23 @@
 package com.example.khsIdentity.response;
 
-import com.example.khsIdentity.domain.Content;
 import com.example.khsIdentity.domain.Feed;
-import com.example.khsIdentity.dto.UserDTO;
-import com.example.khsIdentity.mapper.Mapper;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class FeedResponse {
+public class FeedSimpleResponse {
     private Long id;
     private String title;
     private LocalDateTime createdAt;
 
-    private List<Content> contents;
+    private String username;
 
-    private UserDTO user;
-
-    public FeedResponse(Feed feed) {
+    public FeedSimpleResponse(Feed feed) {
         this.id = feed.getId();
         this.title = feed.getTitle();
         this.createdAt = feed.getCreatedAt();
-        this.contents = feed.getContents();
-        this.user = new Mapper().convertUserToDto(feed.getUser());
+        this.username = feed.getUser().getName();
     }
 
-    public UserDTO getUser() {
-        return user;
-    }
-
-    public void setUser(UserDTO user) {
-        this.user = user;
-    }
 
     public Long getId() {
         return id;
@@ -52,16 +38,16 @@ public class FeedResponse {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public List<Content> getContents() {
-        return contents;
+    public String getUsername() {
+        return username;
     }
 
-    public void setContents(List<Content> contents) {
-        this.contents = contents;
+    public void setUsername(String username) {
+        this.username = username;
     }
-
 }

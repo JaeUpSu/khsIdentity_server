@@ -3,6 +3,7 @@ package com.example.khsIdentity.controller;
 import com.example.khsIdentity.domain.Content;
 import com.example.khsIdentity.domain.Feed;
 import com.example.khsIdentity.response.FeedResponse;
+import com.example.khsIdentity.response.FeedSimpleResponse;
 import com.example.khsIdentity.service.FeedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,30 +27,26 @@ public class FeedController {
 
     @GetMapping
     public ResponseEntity<List<FeedResponse>> getAllFeeds() {
-        List<FeedResponse> feeds = feedService.getAllFeeds().stream()
-                .map(FeedResponse::new)
-                .collect(Collectors.toList());
+        List<FeedResponse> feeds = feedService.getAllFeeds();
         return ResponseEntity.ok(feeds);
     }
 
     @PostMapping
-    public ResponseEntity<FeedResponse> createFeed(@RequestBody Feed feed) {
+    public ResponseEntity<FeedSimpleResponse> createFeed(@RequestBody Feed feed) {
         return ResponseEntity.ok(feedService.write(feed));
     }
 
     @PostMapping("/{feedId}/contents")
-    public ResponseEntity<FeedResponse> addContentToFeed(@PathVariable Long feedId,
+    public ResponseEntity<FeedResponse> addContentToFeed(@PathVariable("feedId") Long feedId,
                                                     @RequestBody Content content) throws IOException {
-        FeedResponse feed = new FeedResponse(feedService.addContentToFeed(feedId, content));
+        FeedResponse feed = feedService.addContentToFeed(feedId, content);
         return ResponseEntity.ok(feed);
     }
 
     @GetMapping("/{feedId}")
-    public ResponseEntity<FeedResponse> getFeed(@PathVariable Long feedId) {
-        Feed feed = feedService.getFeed(feedId)
-                .orElseThrow(() -> new RuntimeException("Feed not found"));
-        FeedResponse response = new FeedResponse(feed);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<FeedResponse> getFeed(@PathVariable("feedId") Long feedId) {
+        FeedResponse feed = feedService.getFeedResponse(feedId);
+        return ResponseEntity.ok(feed);
     }
 
     @GetMapping("/search")

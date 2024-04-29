@@ -45,8 +45,7 @@ public class ContentController {
 
     @GetMapping("/feed/{feedId}")
     public ResponseEntity<List<Content>> getAllContentsByFeed(@PathVariable Long feedId) {
-        Feed feed = feedService.getFeed(feedId)
-                .orElseThrow(() -> new IllegalArgumentException("Feed not found with id: " + feedId));
+        Feed feed = feedService.getFeed(feedId).get();
         List<Content> contents = contentService.findAllContentByFeed(feed);
         return ResponseEntity.ok(contents);
     }

@@ -6,11 +6,13 @@ import com.example.khsIdentity.domain.User;
 import com.example.khsIdentity.repository.Feed.FeedRepository;
 import com.example.khsIdentity.repository.User.UserRepository;
 import com.example.khsIdentity.response.FeedResponse;
+import com.example.khsIdentity.response.FeedSimpleResponse;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional
 public class FeedService {
@@ -20,23 +22,23 @@ public class FeedService {
 
     }
 
-    public FeedResponse write(Feed feed) {
+    public FeedSimpleResponse write(Feed feed) {
         User user = feed.getUser();
         feed.setUser(user);
 
         feedRepository.save(feed);
-        FeedResponse feedResponse = new FeedResponse(feed);
+        FeedSimpleResponse feedResponse = new FeedSimpleResponse(feed);
         return feedResponse;
     }
 
     @Transactional
-    public Feed addContentToFeed(Long feedId, Content content) throws IOException {
+    public FeedResponse addContentToFeed(Long feedId, Content content) throws IOException {
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new IllegalArgumentException("Feed not found with id: " + feedId));
 
         manageContent(feed, content);
 
-        return feed;
+        return new FeedResponse(feed);
     }
 
     private void manageContent(Feed feed, Content content) {
@@ -50,13 +52,20 @@ public class FeedService {
     }
 
     @Transactional(readOnly = true)
+    public FeedResponse getFeedResponse(Long feedId) {
+        return new FeedResponse(feedRepository.findById(feedId).get());
+    }
+
+    @Transactional(readOnly = true)
     public Optional<User> getUserById(Long feedId) {
         return feedRepository.findUserById(feedId);
     }
 
     @Transactional(readOnly = true)
-    public List<Feed> getAllFeeds() {
-        return feedRepository.findAll();
+    public List<FeedResponse> getAllFeeds() {
+        return feedRepository.findAll().stream()
+                .map(FeedResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

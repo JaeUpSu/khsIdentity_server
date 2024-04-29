@@ -4,3 +4,15 @@
 [[Feed-생성]]
 === Feed 생성
 operation::feed-controller-test/post_feed[snippets='http-request,http-response,response-fields']
++
+[[Feed-에-Content-추가]]
+=== Feed 에 Content 추가
+operation::feed-controller-test/add_content_to_feed[snippets='http-request,path-parameters, http-response,response-fields']
++
+[[Feed-모두-조회]]
+=== Feed 모두 조회
+operation::feed-controller-test/get_all_feeds[snippets='http-request,http-response,response-fields']
++
+[[Feed-단일-조회]]
+=== Feed 단일 조회
+operation::feed-controller-test/get_feed[snippets='http-request,http-response,response-fields']

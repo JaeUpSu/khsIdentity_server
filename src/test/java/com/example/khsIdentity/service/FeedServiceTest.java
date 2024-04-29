@@ -6,6 +6,7 @@ import com.example.khsIdentity.domain.User;
 import com.example.khsIdentity.repository.Feed.MemoryFeedRepository;
 import com.example.khsIdentity.repository.User.MemoryUserRepository;
 import com.example.khsIdentity.response.FeedResponse;
+import com.example.khsIdentity.response.FeedSimpleResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,13 +42,13 @@ public class FeedServiceTest {
         User user = new User("mememe12","mememe12","mememe12","mememe12@google.co.kr");
         List<Content> contents = new ArrayList<>();
         Feed feed = new Feed(user, "title", contents);
-        FeedResponse feedResponse = feedService.write(feed);
+        FeedSimpleResponse feedSimpleResponse = feedService.write(feed);
 
         // when
         MultipartFile file = new MockMultipartFile("img", "img".getBytes());
         Content newContent = new Content(feed, "newContents");
         newContent.setImage(file.getBytes());
-        Feed updatedFeed = feedService.addContentToFeed(feedResponse.getId(), newContent);
+        FeedResponse updatedFeed = feedService.addContentToFeed(feedSimpleResponse.getId(), newContent);
 
         // then
         assertThat(newContent).isEqualTo(updatedFeed.getContents().get(0));
@@ -158,7 +159,7 @@ public class FeedServiceTest {
 
         // when
         feedService.deleteFeed(feed3.getId());
-        List<Feed> feeds = feedService.getAllFeeds();
+        List<FeedResponse> feeds = feedService.getAllFeeds();
 
         // then
         assertThat(feeds.size()).isEqualTo(3);
