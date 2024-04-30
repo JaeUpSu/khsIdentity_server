@@ -72,18 +72,18 @@ public class UserControllerTest extends RestDocsTestSupport {
                         restDocs.document(
                                 requestFields(
                                         fieldWithPath("id").description("User Generated NO").type("Long"),
-                                        fieldWithPath("name").description("이름"),
-                                        fieldWithPath("userId").description("사용자 ID"),
-                                        fieldWithPath("password").description("비밀번호").attributes(field("constraints", "길이 8자 이상")),
-                                        fieldWithPath("email").description("이메일"),
-                                        fieldWithPath("createdAt").description("생성 날짜"),
-                                        fieldWithPath("isManager").description("관리자 권한")
+                                        fieldWithPath("name").description("The name of the user"),
+                                        fieldWithPath("userId").description("The user's unique identifier"),                                        fieldWithPath("password").description("비밀번호").attributes(field("constraints", "길이 8자 이상")),
+                                        fieldWithPath("password").description("The password of the user").attributes(field("constraints", "길이 8자 이상")),
+                                        fieldWithPath("email").description("The email of the user"),
+                                        fieldWithPath("createdAt").description("The date and time when the user was created"),
+                                        fieldWithPath("isManager").description("The manager authority of the user")
                                 ),
                                 responseFields(
-                                        fieldWithPath("name").description("이름"),
-                                        fieldWithPath("userId").description("사용자 ID"),
-                                        fieldWithPath("email").description("이메일"),
-                                        fieldWithPath("createdAt").description("생성 날짜")
+                                        fieldWithPath("name").description("The name of the user"),
+                                        fieldWithPath("userId").description("The user's unique identifier"),
+                                        fieldWithPath("email").description("The email of the user"),
+                                        fieldWithPath("createdAt").description("The date and time when the user was created").type("String")
                                 )
                         )
                 );
@@ -122,10 +122,10 @@ public class UserControllerTest extends RestDocsTestSupport {
                 .andDo(
                         restDocs.document(
                                 responseFields(
-                                        fieldWithPath("[].name").description("이름"),
-                                        fieldWithPath("[].userId").description("아이디"),
-                                        fieldWithPath("[].email").description("이메일"),
-                                        fieldWithPath("[].createdAt").description("생성 날짜")
+                                        fieldWithPath("[].name").description("The name of the user"),
+                                        fieldWithPath("[].userId").description("The user's unique identifier"),
+                                        fieldWithPath("[].email").description("The email of the user"),
+                                        fieldWithPath("[].createdAt").description("The date and time when the user was created").type("String")
                                 )
                         )
                 );
@@ -141,13 +141,13 @@ public class UserControllerTest extends RestDocsTestSupport {
                 .andDo(
                         restDocs.document(
                                 pathParameters(
-                                        parameterWithName("name").description("이름")
+                                        parameterWithName("name").description("The name of the user")
                                 ),
                                 responseFields(
-                                        fieldWithPath("[].name").description("이름"),
-                                        fieldWithPath("[].userId").description("아이디"),
-                                        fieldWithPath("[].email").description("이메일"),
-                                        fieldWithPath("[].createdAt").description("생성 날짜")
+                                        fieldWithPath("[].name").description("The name of the user"),
+                                        fieldWithPath("[].userId").description("The user's unique identifier"),
+                                        fieldWithPath("[].email").description("The email of the user"),
+                                        fieldWithPath("[].createdAt").description("The date and time when the user was created").type("String")
                                 )
                         )
                 );
@@ -163,7 +163,7 @@ public class UserControllerTest extends RestDocsTestSupport {
                 .andDo(
                         restDocs.document(
                                 pathParameters(
-                                        parameterWithName("userId").description("User Id")
+                                        parameterWithName("userId").description("The user's unique identifier")
                                 ),
                                 responseFields(
                                         fieldWithPath("name").description("The name of the user"),
@@ -185,7 +185,7 @@ public class UserControllerTest extends RestDocsTestSupport {
                 .andDo(
                         restDocs.document(
                                 pathParameters(
-                                        parameterWithName("email").description("User Email")
+                                        parameterWithName("email").description("The email of the use")
                                 ),
                                 responseFields(
                                         fieldWithPath("name").description("The name of the user"),
@@ -214,10 +214,10 @@ public class UserControllerTest extends RestDocsTestSupport {
                 .andDo(
                         restDocs.document(
                                 responseFields(
-                                        fieldWithPath("name").description("이름"),
-                                        fieldWithPath("userId").description("사용자 ID"),
-                                        fieldWithPath("email").description("이메일"),
-                                        fieldWithPath("createdAt").description("생성 날짜")
+                                        fieldWithPath("name").description("The name of the user"),
+                                        fieldWithPath("userId").description("The user's unique identifier"),
+                                        fieldWithPath("email").description("The email of the user"),
+                                        fieldWithPath("createdAt").description("The date and time when the user was created").type("String").optional()
                                 )
                         )
                 );
