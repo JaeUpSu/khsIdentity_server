@@ -84,7 +84,7 @@ public class FeedServiceTest {
         feedService.write(feed4);
 
         // when
-        List<Feed> feeds = feedService.getFeedsByContainingTitle("포함");
+        List<FeedResponse> feeds = feedService.getFeedsByContainingTitle("포함");
 
         // then
         assertThat(feeds.size()).isEqualTo(3);
@@ -106,7 +106,7 @@ public class FeedServiceTest {
         feedService.write(feed4);
 
         // when
-        List<Feed> feeds = feedService.getFeedsByUser("mememe12");
+        List<FeedResponse> feeds = feedService.getFeedsByUser("mememe12");
 
         // then
         assertThat(feeds.size()).isEqualTo(2);
@@ -121,7 +121,7 @@ public class FeedServiceTest {
         Long id = feedService.write(feed).getId();
 
         // when
-        Feed nextFeed = feedService.updatePrivacy(id, true);
+        FeedResponse nextFeed = feedService.updatePrivacy(id, true);
 
         // then
         assertThat(nextFeed.getIsPrivate()).isEqualTo(true);
@@ -136,7 +136,7 @@ public class FeedServiceTest {
         Long id = feedService.write(feed).getId();
 
         // when
-        Feed nextFeed = feedService.updateTitleFeed(id, "new Title");
+        FeedResponse nextFeed = feedService.updateTitleFeed(id, "new Title");
 
         // then
         assertThat(nextFeed.getTitle()).isEqualTo("new Title");

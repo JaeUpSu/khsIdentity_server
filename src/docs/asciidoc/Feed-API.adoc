@@ -5,10 +5,6 @@
 === Feed 생성
 operation::feed-controller-test/post_feed[snippets='http-request,http-response,response-fields']
 +
-[[Feed-에-Content-추가]]
-=== Feed 에 Content 추가
-operation::feed-controller-test/add_content_to_feed[snippets='http-request,path-parameters, http-response,response-fields']
-+
 [[Feed-모두-조회]]
 === Feed 모두 조회
 operation::feed-controller-test/get_all_feeds[snippets='http-request,http-response,response-fields']
@@ -16,3 +12,27 @@ operation::feed-controller-test/get_all_feeds[snippets='http-request,http-respon
 [[Feed-단일-조회]]
 === Feed 단일 조회
 operation::feed-controller-test/get_feed[snippets='http-request,http-response,response-fields']
++
+[[Feed-포함된-제목-모두-조회]]
+=== Feed 포함된 제목 모두 조회
+operation::feed-controller-test/get_by-title_feed[snippets='http-request,path-parameters,http-response,response-fields']
++
+[[Feed-사용자가-작성한-모두-조회]]
+=== Feed 포함된 제목 모두 조회
+operation::feed-controller-test/get_by-user_feed[snippets='http-request,path-parameters,http-response,response-fields']
++
+[[Feed-에-Content-갱신]]
+=== Feed 에 Content 갱신
+operation::feed-controller-test/add_content_to_feed[snippets='http-request,path-parameters,http-response,response-fields']
++
+[[Feed-숨김-갱신]]
+=== Feed 숨김 갱신
+operation::feed-controller-test/patch_privacy_to_feed[snippets='http-request,path-parameters,http-response,response-fields']
++
+[[Feed-제목-갱신]]
+=== Feed 제목 갱신
+operation::feed-controller-test/patch_title_to_feed[snippets='http-request,path-parameters,http-response,response-fields']
++
+[[Feed-삭제]]
+=== Feed 삭제
+operation::feed-controller-test/delete_feed[snippets='http-request,path-parameters,http-response']

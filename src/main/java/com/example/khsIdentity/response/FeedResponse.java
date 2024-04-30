@@ -17,11 +17,14 @@ public class FeedResponse {
 
     private UserDTO user;
 
+    private boolean isPrivate;
+
     public FeedResponse(Feed feed) {
         this.id = feed.getId();
         this.title = feed.getTitle();
         this.createdAt = feed.getCreatedAt();
         this.contents = feed.getContents();
+        this.isPrivate = feed.getIsPrivate();
         this.user = new Mapper().convertUserToDto(feed.getUser());
     }
 
@@ -64,4 +67,11 @@ public class FeedResponse {
         this.contents = contents;
     }
 
+    public Boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+    public void setIsPrivate(Boolean isPrivate) {
+        this.isPrivate = isPrivate;
+    }
 }

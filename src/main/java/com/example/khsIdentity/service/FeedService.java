@@ -69,29 +69,34 @@ public class FeedService {
     }
 
     @Transactional(readOnly = true)
-    public List<Feed> getFeedsByContainingTitle(String title) {
-        return feedRepository.findByTitleContainingIgnoreCase(title);
+    public List<FeedResponse> getFeedsByContainingTitle(String title) {
+        return feedRepository.findByTitleContainingIgnoreCase(title).stream()
+                .map(FeedResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<Feed> getFeedsByUser(String userId) {
-        return feedRepository.findAllByUser_UserId(userId);
+    public List<FeedResponse> getFeedsByUser(String userId) {
+        return feedRepository.findAllByUser_UserId(userId).stream()
+                .map(FeedResponse::new)
+                .collect(Collectors.toList());
     }
 
-    public Feed updatePrivacy(Long feedId, boolean isPrivate) {
+    public FeedResponse updatePrivacy(Long feedId, boolean isPrivate) {
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new IllegalArgumentException("Feed not found with id: " + feedId));
 
         feed.setIsPrivate(isPrivate);
-        return feedRepository.save(feed);
+
+        return new FeedResponse(feedRepository.save(feed));
     }
 
-    public Feed updateTitleFeed(Long feedId, String title) {
+    public FeedResponse updateTitleFeed(Long feedId, String title) {
         Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new IllegalArgumentException("Feed not found with id: " + feedId));
 
         feed.setTitle(title);
-        return feedRepository.save(feed);
+        return new FeedResponse(feedRepository.save(feed));
     }
 
     public void deleteFeed(Long feedId) {

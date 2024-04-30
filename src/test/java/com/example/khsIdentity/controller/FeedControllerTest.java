@@ -18,13 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 
 
 @SpringBootTest
@@ -73,6 +71,14 @@ public class FeedControllerTest extends RestDocsTestSupport {
         when(feedService.write(any(Feed.class))).thenReturn(feedSimpleResponse);
         when(feedService.getAllFeeds()).thenReturn(feeds);
         when(feedService.getFeedResponse(anyLong())).thenReturn(feedResponses.get(0));
+        when(feedService.getFeedsByContainingTitle(anyString())).thenReturn(feedResponses);
+        when(feedService.getFeedsByUser(anyString())).thenReturn(feedResponses);
+
+        feed1.setIsPrivate(!feed1.getIsPrivate());
+        when(feedService.updatePrivacy(anyLong(),anyBoolean())).thenReturn(feedResponses.get(0));
+
+        feed1.setTitle("업데이트된 제목");
+        when(feedService.updateTitleFeed(anyLong(),anyString())).thenReturn(feedResponses.get(0));
     }
 
     @Test
@@ -108,7 +114,7 @@ public class FeedControllerTest extends RestDocsTestSupport {
                                             fieldWithPath("title").description("The title of the feed"),
                                             fieldWithPath("user.id").description("The ID of the user posting the feed"),
                                             fieldWithPath("user.name").description("The name of the user"),
-                                            fieldWithPath("user.userId").description("The username of the user"),
+                                            fieldWithPath("user.userId").description("The ID of the user"),
                                             fieldWithPath("user.password").description("The password of the user"),
                                             fieldWithPath("user.email").description("The email of the user"),
                                             fieldWithPath("user.createdAt").description("The creation timestamp of the user record"),
@@ -143,12 +149,13 @@ public class FeedControllerTest extends RestDocsTestSupport {
                                         fieldWithPath("[].id").description("The identifier of the feed"),
                                         fieldWithPath("[].title").description("The title of the feed"),
                                         fieldWithPath("[].user.name").description("The name of the user"),
-                                        fieldWithPath("[].user.userId").description("The username of the user"),
+                                        fieldWithPath("[].user.userId").description("The ID of the user"),
                                         fieldWithPath("[].user.email").description("The email of the user"),
                                         fieldWithPath("[].user.createdAt").description("The creation timestamp of the user record"),
                                         fieldWithPath("[].contents[].id").description("The email of the user"),
                                         fieldWithPath("[].contents[].body").description("The email of the user"),
                                         fieldWithPath("[].contents[].image").description("The creation timestamp of the user record"),
+                                        fieldWithPath("[].isPrivate").description("Whether the feed is private"),
                                         fieldWithPath("[].createdAt").description("The timestamp when the feed was created")
                                 )
                         )
@@ -171,13 +178,72 @@ public class FeedControllerTest extends RestDocsTestSupport {
                                         fieldWithPath("id").description("The identifier of the feed"),
                                         fieldWithPath("title").description("The title of the feed"),
                                         fieldWithPath("user.name").description("The name of the user"),
-                                        fieldWithPath("user.userId").description("The username of the user"),
+                                        fieldWithPath("user.userId").description("The ID of the user"),
                                         fieldWithPath("user.email").description("The email of the user"),
                                         fieldWithPath("user.createdAt").description("The creation timestamp of the user record"),
                                         fieldWithPath("contents[].id").description("The email of the user"),
                                         fieldWithPath("contents[].body").description("The email of the user"),
                                         fieldWithPath("contents[].image").description("The creation timestamp of the user record"),
+                                        fieldWithPath("isPrivate").description("Whether the feed is private"),
                                         fieldWithPath("createdAt").description("The timestamp when the feed was created")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void get_byTitle_feed() throws Exception {
+        mockMvc.perform(
+                        get("/api/feeds/search/{title}", "피드")
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("title").description("The title of the feed")
+                                ),
+                                responseFields(
+                                        fieldWithPath("[].id").description("The identifier of the feed"),
+                                        fieldWithPath("[].title").description("The title of the feed"),
+                                        fieldWithPath("[].user.name").description("The name of the user"),
+                                        fieldWithPath("[].user.userId").description("The ID of the user"),
+                                        fieldWithPath("[].user.email").description("The email of the user"),
+                                        fieldWithPath("[].user.createdAt").description("The creation timestamp of the user record"),
+                                        fieldWithPath("[].contents[].id").description("The email of the user"),
+                                        fieldWithPath("[].contents[].body").description("The email of the user"),
+                                        fieldWithPath("[].contents[].image").description("The creation timestamp of the user record"),
+                                        fieldWithPath("[].isPrivate").description("Whether the feed is private"),
+                                        fieldWithPath("[].createdAt").description("The timestamp when the feed was created")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void get_byUser_feed() throws Exception {
+        mockMvc.perform(
+                        get("/api/feeds/user/{userId}", "JaeUpSu")
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("userId").description("The title of the feed")
+                                ),
+                                responseFields(
+                                        fieldWithPath("[].id").description("The identifier of the feed"),
+                                        fieldWithPath("[].title").description("The title of the feed"),
+                                        fieldWithPath("[].user.name").description("The name of the user"),
+                                        fieldWithPath("[].user.userId").description("The ID of the user"),
+                                        fieldWithPath("[].user.email").description("The email of the user"),
+                                        fieldWithPath("[].user.createdAt").description("The creation timestamp of the user record"),
+                                        fieldWithPath("[].contents[].id").description("The email of the user"),
+                                        fieldWithPath("[].contents[].body").description("The email of the user"),
+                                        fieldWithPath("[].contents[].image").description("The creation timestamp of the user record"),
+                                        fieldWithPath("[].isPrivate").description("Whether the feed is private"),
+                                        fieldWithPath("[].createdAt").description("The timestamp when the feed was created")
                                 )
                         )
                 );
@@ -198,7 +264,7 @@ public class FeedControllerTest extends RestDocsTestSupport {
         newContent.setId(2L);
 
         mockMvc.perform(
-                        post("/api/feeds/{feedId}/contents", 2L)
+                        patch("/api/feeds/{feedId}/contents", 2L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(createJson(newContent))
                 ).andExpect(status().isOk())
@@ -223,9 +289,94 @@ public class FeedControllerTest extends RestDocsTestSupport {
                                         fieldWithPath("contents[].id").description("The email of the user"),
                                         fieldWithPath("contents[].body").description("The email of the user"),
                                         fieldWithPath("contents[].image").description("The creation timestamp of the user record"),
+                                        fieldWithPath("isPrivate").description("Whether the feed is private"),
                                         fieldWithPath("createdAt").description("The timestamp when the feed was created")
                                 )
                         )
                 );
     }
+
+    @Test
+    public void patch_privacy_to_feed() throws Exception {
+        mockMvc.perform(
+                        patch("/api/feeds/{feedId}/privacy", 1L)
+                                .queryParam("isPrivate","true")
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("feedId").description("Generated Feed NO")
+                                ),
+                                queryParameters(
+                                        parameterWithName("isPrivate").description("Whether the feed is private")
+
+                                ),
+                                responseFields(
+                                        fieldWithPath("id").description("The identifier of the feed"),
+                                        fieldWithPath("title").description("The title of the feed"),
+                                        fieldWithPath("user.name").description("The name of the user"),
+                                        fieldWithPath("user.userId").description("The username of the user"),
+                                        fieldWithPath("user.email").description("The email of the user"),
+                                        fieldWithPath("user.createdAt").description("The creation timestamp of the user record"),
+                                        fieldWithPath("contents[].id").description("The email of the user"),
+                                        fieldWithPath("contents[].body").description("The email of the user"),
+                                        fieldWithPath("contents[].image").description("The creation timestamp of the user record"),
+                                        fieldWithPath("isPrivate").description("Whether the feed is private"),
+                                        fieldWithPath("createdAt").description("The timestamp when the feed was created")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void patch_title_to_feed() throws Exception {
+        mockMvc.perform(
+                        patch("/api/feeds/{feedId}/title", 1L)
+                                .queryParam("title","업데이트된 제목")
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("feedId").description("Generated Feed NO")
+                                ),
+                                queryParameters(
+                                        parameterWithName("title").description("The title of the feed")
+                                ),
+                                responseFields(
+                                        fieldWithPath("id").description("The identifier of the feed"),
+                                        fieldWithPath("title").description("The title of the feed"),
+                                        fieldWithPath("user.name").description("The name of the user"),
+                                        fieldWithPath("user.userId").description("The username of the user"),
+                                        fieldWithPath("user.email").description("The email of the user"),
+                                        fieldWithPath("user.createdAt").description("The creation timestamp of the user record"),
+                                        fieldWithPath("contents[].id").description("The email of the user"),
+                                        fieldWithPath("contents[].body").description("The email of the user"),
+                                        fieldWithPath("contents[].image").description("The creation timestamp of the user record"),
+                                        fieldWithPath("isPrivate").description("Whether the feed is private"),
+                                        fieldWithPath("createdAt").description("The timestamp when the feed was created")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void delete_feed() throws Exception {
+        mockMvc.perform(
+                        delete("/api/feeds/{feedId}", 1L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
+                .andDo(print())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("feedId").description("Generated Feed NO")
+                                )
+                        )
+                );
+    }
+
 }
