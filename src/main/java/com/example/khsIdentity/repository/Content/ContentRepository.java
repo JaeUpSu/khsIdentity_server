@@ -15,5 +15,5 @@ public interface ContentRepository {
 
     List<Content> findAll();
 
-    void delete(Content content);
+    void deleteById(Long contentId);
 }

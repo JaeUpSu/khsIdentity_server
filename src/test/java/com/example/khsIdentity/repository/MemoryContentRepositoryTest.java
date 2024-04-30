@@ -62,7 +62,7 @@ public class MemoryContentRepositoryTest {
 
         repository.save(content1);
         repository.save(content2);
-        repository.delete(content1);
+        repository.deleteById(content1.getId());
 
         Content result = repository.findByFeed(content2.getFeed()).get(0);
 

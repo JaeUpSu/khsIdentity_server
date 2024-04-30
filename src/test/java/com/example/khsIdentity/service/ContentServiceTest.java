@@ -54,7 +54,7 @@ public class ContentServiceTest {
         // when (이거를 실행 했을 때)
         String str1 = "img1";
         byte[] buffers = str1.getBytes();
-        contentService.updateContent(content.getId(), "update", buffers);
+        contentService.updateBody(content.getId(), "update");
         Content findContent = contentService.findAllContentByFeed(feed).get(0);
 
         // then (이 결과가 기대돼)

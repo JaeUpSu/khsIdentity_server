@@ -1,0 +1,22 @@
+[[Content-API]]
+== Content API
++
+[[Content-모두-조회]]
+=== Content 모두 조회
+operation::content-controller-test/get_all_contents[snippets='http-request,http-response,response-fields']
++
+[[Content-단일-조회]]
+=== Content 단일 조회
+operation::content-controller-test/get_one_content[snippets='http-request,path-parameters,http-response,response-fields']
++
+[[Content-내용-갱신]]
+=== Content 내용 갱신
+operation::content-controller-test/put_content_body[snippets='http-request,path-parameters,http-response,response-fields']
++
+[[Content-이미지-업로드]]
+=== Content 이미지 업로드
+operation::content-controller-test/upload_content_image[snippets='http-request,path-parameters,http-response,response-fields']
++
+[[Content-삭제]]
+=== Content 삭제
+operation::content-controller-test/delete_content[snippets='http-request,path-parameters,http-response']

@@ -16,11 +16,18 @@ public class ContentService {
         this.contentRepository = contentRepository;
     }
 
-    public Content updateContent(Long contentId, String newData, byte[] newImage) {
+    public Content updateBody(Long contentId, String newBody) {
         Content content = contentRepository.findById(contentId)
                 .orElseThrow(() -> new IllegalArgumentException("Content not found with id: " + contentId));
 
-        content.setBody(newData);
+        content.setBody(newBody);
+        return contentRepository.save(content);
+    }
+
+    public Content updateImage(Long contentId, byte[] newImage) {
+        Content content = contentRepository.findById(contentId)
+                .orElseThrow(() -> new IllegalArgumentException("Content not found with id: " + contentId));
+
         content.setImage(newImage);
         return contentRepository.save(content);
     }
@@ -28,6 +35,11 @@ public class ContentService {
     @Transactional(readOnly = true)
     public Optional<Content> findOne(Long contentId) {
         return contentRepository.findById(contentId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Content> findAll() {
+        return contentRepository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -49,5 +61,12 @@ public class ContentService {
         return content.map(Content::getFeed)
                 .map(Feed::getTitle)
                 .orElseThrow(() -> new IllegalArgumentException("Content not found with id: " + contentId));
+    }
+
+    public void deleteContent(Long contentId) {
+        contentRepository.findById(contentId)
+                .orElseThrow(() -> new IllegalArgumentException("Feed not found with id: " + contentId));
+
+        contentRepository.deleteById(contentId);
     }
 }

@@ -12,3 +12,6 @@ include::User-API.adoc[]
 @ +
 @
 include::Feed-API.adoc[]
+@ +
+@
+include::Content-API.adoc[]

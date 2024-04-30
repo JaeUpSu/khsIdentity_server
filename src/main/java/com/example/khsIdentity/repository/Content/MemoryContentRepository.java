@@ -47,10 +47,8 @@ public class MemoryContentRepository implements ContentRepository {
     }
 
     @Override
-    public void delete(Content content) {
-        if (content != null && content.getId() != null) {
-            store.remove(content.getId());
-        }
+    public void deleteById(Long contentId) {
+            store.remove(contentId);
     }
 
     public void clearStore() {
